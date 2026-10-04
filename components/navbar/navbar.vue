@@ -3,7 +3,7 @@
 		<uni-nav-bar>
 			<view class="input-view">
 				<uni-icons type="search" size="22" color="#666"/>
-				<input confirm-type="search" class="nav-bar-input" placeholder="19588节开发课程,任你搜">
+				<input confirm-type="search" class="nav-bar-input" placeholder="10000节开发课程,任你搜">
 			</view>
 		</uni-nav-bar>
 	</view>
