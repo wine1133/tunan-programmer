@@ -38,15 +38,29 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host 'No local changes to commit.'
 }
 
+$originalErrorAction = $ErrorActionPreference
+$ErrorActionPreference = 'SilentlyContinue'
 gh auth status *> $null
-if ($LASTEXITCODE -ne 0) {
+$authExitCode = $LASTEXITCODE
+$ErrorActionPreference = $originalErrorAction
+if ($authExitCode -ne 0) {
     throw 'GitHub login expired. Run: gh auth login --hostname github.com --git-protocol https --web'
 }
 
-$remote = git remote get-url origin 2>$null
+$remotes = @(git remote)
+if ($remotes -contains 'origin') {
+    $remote = git remote get-url origin
+} else {
+    $remote = $null
+}
+
 if (-not $remote) {
+    $ErrorActionPreference = 'SilentlyContinue'
     gh repo view $Repo *> $null
-    if ($LASTEXITCODE -ne 0) {
+    $repoExitCode = $LASTEXITCODE
+    $ErrorActionPreference = $originalErrorAction
+
+    if ($repoExitCode -ne 0) {
         gh repo create $Repo --public --source . --remote origin --push
     } else {
         git remote add origin "https://github.com/$Repo.git"
@@ -56,8 +70,11 @@ if (-not $remote) {
     git push -u origin $Branch
 }
 
+$ErrorActionPreference = 'SilentlyContinue'
 gh api --method POST "repos/$Repo/pages" -f "source[branch]=$Branch" -f 'source[path]=/docs' *> $null
-if ($LASTEXITCODE -ne 0) {
+$pagesExitCode = $LASTEXITCODE
+$ErrorActionPreference = $originalErrorAction
+if ($pagesExitCode -ne 0) {
     gh api --method PUT "repos/$Repo/pages" -f "source[branch]=$Branch" -f 'source[path]=/docs' *> $null
 }
 
