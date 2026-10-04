@@ -40,7 +40,7 @@ if ($LASTEXITCODE -ne 0) {
 
 $originalErrorAction = $ErrorActionPreference
 $ErrorActionPreference = 'SilentlyContinue'
-gh auth status *> $null
+cmd /c "gh auth status >nul 2>&1"
 $authExitCode = $LASTEXITCODE
 $ErrorActionPreference = $originalErrorAction
 if ($authExitCode -ne 0) {
