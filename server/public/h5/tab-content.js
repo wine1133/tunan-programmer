@@ -51,6 +51,19 @@
       ".tt-video-sub{margin-top:4px;font-size:11px;color:#8f9995}",
       ".tt-video-duration{padding:4px 9px;border-radius:10px;background:#e9f9f3;color:#00a575;font-size:10px}",
       ".tt-video-player{display:block;width:100%;height:190px;border-radius:12px;background:#07110d;object-fit:cover}",
+      ".tt-sheet-mask{position:fixed;inset:0;z-index:99999;background:rgba(8,20,15,.45);display:flex;align-items:flex-end}",
+      ".tt-sheet{width:100%;max-height:78vh;border-radius:20px 20px 0 0;background:#f6faf8;overflow:hidden;box-shadow:0 -8px 30px rgba(0,0,0,.18)}",
+      ".tt-sheet-head{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;background:#fff;border-bottom:1px solid #edf2ef}",
+      ".tt-sheet-title{font-size:16px;font-weight:700;color:#17211d}",
+      ".tt-sheet-close{width:28px;height:28px;border-radius:50%;background:#eef3f1;color:#6f7d77;display:flex;align-items:center;justify-content:center;font-size:18px}",
+      ".tt-sheet-body{max-height:calc(78vh - 56px);overflow-y:auto;padding:12px}",
+      ".tt-info-card{margin-bottom:10px;padding:12px;border-radius:12px;background:#fff;box-shadow:0 4px 10px rgba(24,48,39,.05)}",
+      ".tt-info-head{display:flex;justify-content:space-between;gap:8px}.tt-info-title{font-size:13px;font-weight:600;color:#1c2923}.tt-status{font-size:10px;color:#00a575}",
+      ".tt-info-sub{margin-top:5px;color:#929d98;font-size:10px;line-height:1.5}.tt-info-value{margin-top:7px;color:#ff5b52;font-size:14px;font-weight:700}",
+      ".tt-fav-card{display:flex;margin-bottom:10px;padding:10px;border-radius:12px;background:#fff}.tt-fav-img{width:84px;height:60px;border-radius:8px;object-fit:cover;background:#eef2f0}.tt-fav-info{flex:1;min-width:0;margin-left:10px}.tt-fav-info h4{margin:0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tt-fav-info p{margin:5px 0 0;font-size:10px;color:#929d98;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}",
+      ".tt-coupon{position:relative;margin-bottom:10px;padding:12px;border-radius:12px;background:linear-gradient(135deg,#fff7e8,#fff);border:1px solid #ffe0ad}.tt-coupon b{color:#ff6b2c;font-size:22px}.tt-coupon-title{display:inline-block;margin-left:6px;font-size:12px;color:#4c3a25}.tt-coupon-sub{margin-top:6px;font-size:10px;color:#9a8c78}.tt-coupon-status{position:absolute;right:10px;top:10px;font-size:10px;color:#00a575}",
+      ".tt-setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 12px;background:#fff;border-bottom:1px solid #f0f3f2;font-size:12px;color:#1c2923}.tt-setting-row:last-child{border-bottom:0}.tt-setting-value{color:#00a575;font-weight:600}",
+      ".tt-progress-mini{height:5px;border-radius:5px;background:#edf2f0;overflow:hidden;margin-top:7px}.tt-progress-mini i{display:block;height:100%;border-radius:5px;background:#00b783}",
       ".tt-empty{padding:45px 0;text-align:center;color:#9aa39f;font-size:12px}"
     ].join("")
     document.head.appendChild(style)
@@ -147,6 +160,56 @@
       if (loading) loading.textContent = "视频加载失败"
     })
   }
+  function openMenuPanel(menuId, title) {
+    var mask = document.createElement("div")
+    mask.className = "tt-sheet-mask"
+    mask.innerHTML = '<div class="tt-sheet"><div class="tt-sheet-head"><div class="tt-sheet-title">' + escapeHtml(title) + '</div><div class="tt-sheet-close">×</div></div><div class="tt-sheet-body"><div class="tt-empty">正在加载...</div></div></div>'
+    document.body.appendChild(mask)
+
+    function close() {
+      if (mask.parentNode) mask.parentNode.removeChild(mask)
+    }
+    mask.addEventListener("click", function (event) {
+      if (event.target === mask) close()
+    })
+    mask.querySelector(".tt-sheet-close").addEventListener("click", close)
+
+    var endpoints = {
+      "1": "/api/user/orders?userid=2162",
+      "2": "/api/user/favorites?userid=2162",
+      "3": "/api/study/list?userid=2162",
+      "4": "/api/user/coupons?userid=2162",
+      "5": "/api/user/settings?userid=2162"
+    }
+    var body = mask.querySelector(".tt-sheet-body")
+    api(endpoints[menuId] || "").then(function (result) {
+      var data = result.data || []
+      var html = ""
+      if (menuId === "1") {
+        html = data.map(function (item) {
+          return '<div class="tt-info-card"><div class="tt-info-head"><span class="tt-info-title">' + escapeHtml(item.title) + '</span><span class="tt-status">已支付</span></div><div class="tt-info-sub">订单号：' + escapeHtml(item.orderNo) + '<br>' + escapeHtml(item.createdAt) + '</div><div class="tt-info-value">¥' + Number(item.amount).toFixed(2) + '</div></div>'
+        }).join("")
+      } else if (menuId === "2") {
+        html = data.map(function (item) {
+          return '<div class="tt-fav-card"><img class="tt-fav-img" src="' + escapeHtml(item.logo) + '"><div class="tt-fav-info"><h4>' + escapeHtml(item.title) + '</h4><p>' + escapeHtml(item.description) + '</p><div class="tt-sub">' + item.hits + ' 人学过</div></div></div>'
+        }).join("")
+      } else if (menuId === "3") {
+        html = data.map(function (item) {
+          return '<div class="tt-info-card"><div class="tt-info-head"><span class="tt-info-title">' + escapeHtml(item.title) + '</span><span class="tt-status">' + item.progress + '%</span></div><div class="tt-progress-mini"><i style="width:' + item.progress + '%"></i></div><div class="tt-info-sub">' + item.learnedLessons + '/' + item.totalLessons + ' 节 · ' + escapeHtml(item.lastStudyAt) + '</div></div>'
+        }).join("")
+      } else if (menuId === "4") {
+        html = data.map(function (item) {
+          var statusText = item.status === "available" ? "可使用" : (item.status === "used" ? "已使用" : "已过期")
+          return '<div class="tt-coupon"><span class="tt-coupon-status">' + statusText + '</span><b>¥' + Number(item.amount).toFixed(0) + '</b><span class="tt-coupon-title">' + escapeHtml(item.title) + '</span><div class="tt-coupon-sub">满 ¥' + Number(item.minAmount).toFixed(0) + ' 可用 · 有效期至 ' + escapeHtml(item.expiresAt) + '</div></div>'
+        }).join("")
+      } else if (menuId === "5") {
+        html = '<div class="tt-setting-row"><span>消息通知</span><span class="tt-setting-value">' + (result.data.messageNotify ? "已开启" : "已关闭") + '</span></div><div class="tt-setting-row"><span>自动播放视频</span><span class="tt-setting-value">' + (result.data.autoplayVideo ? "已开启" : "已关闭") + '</span></div><div class="tt-setting-row"><span>下载清晰度</span><span class="tt-setting-value">' + escapeHtml(result.data.downloadQuality) + '</span></div>'
+      }
+      body.innerHTML = html || '<div class="tt-empty">暂无内容</div>'
+    }).catch(function () {
+      body.innerHTML = '<div class="tt-empty">内容加载失败</div>'
+    })
+  }
   function renderMine(body) {
     if (!setBody(body, "mine")) return
     body.innerHTML = '<div class="tt-page"><div class="tt-profile"><div class="tt-profile-top"><div class="tt-avatar" id="tt-avatar">兔</div><div class="tt-profile-main"><h2 id="tt-nickname">兔南学员</h2><p id="tt-bio">正在加载...</p><span class="tt-vip" id="tt-vip">普通学员</span></div></div><div class="tt-profile-stats"><div class="tt-profile-stat"><b id="tt-days">0</b><span>学习天数</span></div><div class="tt-profile-stat"><b id="tt-hours">0</b><span>累计小时</span></div><div class="tt-profile-stat"><b id="tt-courses">0</b><span>课程数</span></div><div class="tt-profile-stat"><b id="tt-finished">0</b><span>已完成</span></div></div></div><div class="tt-menu" id="tt-menu"><div class="tt-empty">正在加载个人中心...</div></div></div>'
@@ -163,8 +226,13 @@
       document.getElementById("tt-finished").textContent = stats.finishedCourses || 0
       var menu = document.getElementById("tt-menu")
       menu.innerHTML = (data.menus || []).map(function (item) {
-        return '<div class="tt-menu-row"><div class="tt-menu-icon icon iconfont ' + escapeHtml(item.icon) + '"></div><div class="tt-menu-title">' + escapeHtml(item.title) + '</div>' + (item.badge ? '<span class="tt-badge">' + escapeHtml(item.badge) + '</span>' : '') + '<span class="tt-arrow">›</span></div>'
+        return '<div class="tt-menu-row" data-menu-id="' + item.id + '" data-menu-title="' + escapeHtml(item.title) + '"><div class="tt-menu-icon icon iconfont ' + escapeHtml(item.icon) + '"></div><div class="tt-menu-title">' + escapeHtml(item.title) + '</div>' + (item.badge ? '<span class="tt-badge">' + escapeHtml(item.badge) + '</span>' : '') + '<span class="tt-arrow">›</span></div>'
       }).join("")
+      menu.querySelectorAll("[data-menu-id]").forEach(function (element) {
+        element.addEventListener("click", function () {
+          openMenuPanel(element.getAttribute("data-menu-id"), element.getAttribute("data-menu-title"))
+        })
+      })
     }).catch(function () {
       var menu = document.getElementById("tt-menu")
       if (menu) menu.innerHTML = '<div class="tt-empty">个人资料加载失败</div>'

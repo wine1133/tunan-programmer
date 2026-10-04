@@ -323,3 +323,85 @@ ON DUPLICATE KEY UPDATE
     `poster_url` = VALUES(`poster_url`),
     `duration` = VALUES(`duration`),
     `sort_order` = VALUES(`sort_order`);
+CREATE TABLE IF NOT EXISTS `user_orders` (
+    `id` INT UNSIGNED NOT NULL,
+    `user_id` INT UNSIGNED NOT NULL,
+    `order_no` VARCHAR(60) NOT NULL,
+    `course_id` INT UNSIGNED NOT NULL,
+    `amount` DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    `status` VARCHAR(30) NOT NULL DEFAULT 'paid',
+    `created_at` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_user_orders_user` (`user_id`, `created_at`),
+    CONSTRAINT `fk_user_orders_course` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `user_favorites` (
+    `id` INT UNSIGNED NOT NULL,
+    `user_id` INT UNSIGNED NOT NULL,
+    `course_id` INT UNSIGNED NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_user_favorite_course` (`user_id`, `course_id`),
+    CONSTRAINT `fk_user_favorites_course` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `user_coupons` (
+    `id` INT UNSIGNED NOT NULL,
+    `user_id` INT UNSIGNED NOT NULL,
+    `title` VARCHAR(100) NOT NULL,
+    `amount` DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    `min_amount` DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    `expires_at` DATE NOT NULL,
+    `status` ENUM('available', 'used', 'expired') NOT NULL DEFAULT 'available',
+    PRIMARY KEY (`id`),
+    KEY `idx_user_coupons_user` (`user_id`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `user_settings` (
+    `user_id` INT UNSIGNED NOT NULL,
+    `message_notify` TINYINT(1) NOT NULL DEFAULT 1,
+    `autoplay_video` TINYINT(1) NOT NULL DEFAULT 0,
+    `download_quality` VARCHAR(30) NOT NULL DEFAULT '高清',
+    PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `user_orders` (`id`, `user_id`, `order_no`, `course_id`, `amount`, `status`, `created_at`) VALUES
+    (1, 2162, 'TN202610040001', 1, 99.00, 'paid', '2026-10-04 10:20:00'),
+    (2, 2162, 'TN202610030002', 4, 69.00, 'paid', '2026-10-03 15:40:00'),
+    (3, 2162, 'TN202610020003', 5, 49.00, 'paid', '2026-10-02 09:15:00')
+ON DUPLICATE KEY UPDATE
+    `order_no` = VALUES(`order_no`),
+    `course_id` = VALUES(`course_id`),
+    `amount` = VALUES(`amount`),
+    `status` = VALUES(`status`),
+    `created_at` = VALUES(`created_at`);
+
+INSERT INTO `user_favorites` (`id`, `user_id`, `course_id`, `created_at`) VALUES
+    (1, 2162, 3, '2026-10-04 12:10:00'),
+    (2, 2162, 4, '2026-10-03 18:25:00'),
+    (3, 2162, 6, '2026-10-02 14:30:00'),
+    (4, 2162, 7, '2026-10-01 20:05:00')
+ON DUPLICATE KEY UPDATE
+    `created_at` = VALUES(`created_at`);
+
+INSERT INTO `user_coupons` (`id`, `user_id`, `title`, `amount`, `min_amount`, `expires_at`, `status`) VALUES
+    (1, 2162, '新客专享券', 10.00, 49.00, '2026-10-31', 'available'),
+    (2, 2162, '课程通用券', 20.00, 99.00, '2026-11-15', 'available'),
+    (3, 2162, '就业班优惠券', 50.00, 299.00, '2026-12-31', 'available'),
+    (4, 2162, '限时体验券', 5.00, 19.00, '2026-10-05', 'used')
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `amount` = VALUES(`amount`),
+    `min_amount` = VALUES(`min_amount`),
+    `expires_at` = VALUES(`expires_at`),
+    `status` = VALUES(`status`);
+
+INSERT INTO `user_settings` (`user_id`, `message_notify`, `autoplay_video`, `download_quality`) VALUES
+    (2162, 1, 0, '高清')
+ON DUPLICATE KEY UPDATE
+    `message_notify` = VALUES(`message_notify`),
+    `autoplay_video` = VALUES(`autoplay_video`),
+    `download_quality` = VALUES(`download_quality`);

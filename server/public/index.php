@@ -286,6 +286,100 @@ try {
             ]);
             break;
 
+        case '/api/user/orders':
+            $userId = isset($_GET['userid']) ? (int) $_GET['userid'] : 2162;
+            $rows = fetch_all(
+                'SELECT o.id, o.order_no, o.amount, o.status, o.created_at, c.id AS course_id,
+                        c.text_t AS title, c.description, c.logo
+                 FROM user_orders o
+                 INNER JOIN courses c ON c.id = o.course_id
+                 WHERE o.user_id = ?
+                 ORDER BY o.created_at DESC, o.id DESC',
+                [$userId]
+            );
+            $rows = array_map(function (array $row): array {
+                return [
+                    'id' => (int) $row['id'],
+                    'orderNo' => $row['order_no'],
+                    'courseId' => (int) $row['course_id'],
+                    'title' => $row['title'],
+                    'description' => $row['description'],
+                    'logo' => asset_url($row['logo']),
+                    'amount' => (float) $row['amount'],
+                    'status' => $row['status'],
+                    'createdAt' => $row['created_at'],
+                ];
+            }, $rows);
+            json_response(['code' => 0, 'message' => 'ok', 'data' => $rows]);
+            break;
+
+        case '/api/user/favorites':
+            $userId = isset($_GET['userid']) ? (int) $_GET['userid'] : 2162;
+            $rows = fetch_all(
+                'SELECT f.id, f.created_at, c.id AS course_id, c.text_t AS title,
+                        c.description, c.logo, c.hits
+                 FROM user_favorites f
+                 INNER JOIN courses c ON c.id = f.course_id
+                 WHERE f.user_id = ?
+                 ORDER BY f.created_at DESC, f.id DESC',
+                [$userId]
+            );
+            $rows = array_map(function (array $row): array {
+                return [
+                    'id' => (int) $row['id'],
+                    'courseId' => (int) $row['course_id'],
+                    'title' => $row['title'],
+                    'description' => $row['description'],
+                    'logo' => asset_url($row['logo']),
+                    'hits' => (int) $row['hits'],
+                    'createdAt' => $row['created_at'],
+                ];
+            }, $rows);
+            json_response(['code' => 0, 'message' => 'ok', 'data' => $rows]);
+            break;
+
+        case '/api/user/coupons':
+            $userId = isset($_GET['userid']) ? (int) $_GET['userid'] : 2162;
+            $rows = fetch_all(
+                'SELECT id, title, amount, min_amount, expires_at, status
+                 FROM user_coupons
+                 WHERE user_id = ?
+                 ORDER BY status, expires_at, id',
+                [$userId]
+            );
+            $rows = array_map(function (array $row): array {
+                return [
+                    'id' => (int) $row['id'],
+                    'title' => $row['title'],
+                    'amount' => (float) $row['amount'],
+                    'minAmount' => (float) $row['min_amount'],
+                    'expiresAt' => $row['expires_at'],
+                    'status' => $row['status'],
+                ];
+            }, $rows);
+            json_response(['code' => 0, 'message' => 'ok', 'data' => $rows]);
+            break;
+
+        case '/api/user/settings':
+            $userId = isset($_GET['userid']) ? (int) $_GET['userid'] : 2162;
+            $settings = fetch_one(
+                'SELECT message_notify, autoplay_video, download_quality FROM user_settings WHERE user_id = ?',
+                [$userId]
+            );
+            if ($settings === null) {
+                json_response(['code' => 404, 'message' => 'Settings not found', 'data' => null], 404);
+            }
+            json_response([
+                'code' => 0,
+                'message' => 'ok',
+                'data' => [
+                    'messageNotify' => (bool) $settings['message_notify'],
+                    'autoplayVideo' => (bool) $settings['autoplay_video'],
+                    'downloadQuality' => $settings['download_quality'],
+                ],
+            ]);
+            break;
+
         default:
             json_response(['code' => 404, 'message' => 'API Not Found'], 404);
     }
