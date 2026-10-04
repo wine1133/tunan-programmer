@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="260" viewBox="0 0 750 260" role="img" aria-label="兔南程序员">
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00d6a3">
+        <animate attributeName="stop-color" values="#00d6a3;#00a97f;#00d6a3" dur="7s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#075e55">
+        <animate attributeName="stop-color" values="#075e55;#03a58c;#075e55" dur="7s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7dffd9" stop-opacity=".65"/>
+      <stop offset="100%" stop-color="#7dffd9" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur1"><feGaussianBlur stdDeviation="16"/></filter>
+    <clipPath id="clip1"><rect width="750" height="260" rx="26"/></clipPath>
+    <style>
+      .float1{animation:float1 5s ease-in-out infinite}.float2{animation:float2 7s ease-in-out infinite}.float3{animation:float3 6s ease-in-out infinite}
+      .pulse{animation:pulse 3s ease-in-out infinite}.dash{stroke-dasharray:12 18;animation:dash 8s linear infinite}
+      @keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(22px,-14px)}}
+      @keyframes float2{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(-26px,18px) rotate(12deg)}}
+      @keyframes float3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,12px) scale(1.12)}}
+      @keyframes pulse{0%,100%{opacity:.35}50%{opacity:.95}}
+      @keyframes dash{to{stroke-dashoffset:-240}}
+    </style>
+  </defs>
+  <g clip-path="url(#clip1)">
+    <rect width="750" height="260" rx="26" fill="url(#bg1)"/>
+    <circle cx="610" cy="30" r="170" fill="url(#glow1)" filter="url(#blur1)" class="float1"/>
+    <circle cx="90" cy="265" r="150" fill="#fff" opacity=".07" class="float2"/>
+    <path d="M370 210 C470 120 570 250 760 130" fill="none" stroke="#aaffea" stroke-width="2" opacity=".28" class="dash"/>
+    <g class="float3" opacity=".72">
+      <rect x="540" y="58" width="142" height="104" rx="18" fill="#fff" opacity=".1" stroke="#fff" stroke-opacity=".22"/>
+      <rect x="560" y="80" width="60" height="7" rx="3.5" fill="#fff" opacity=".7"/>
+      <rect x="560" y="98" width="94" height="6" rx="3" fill="#fff" opacity=".38"/>
+      <rect x="560" y="114" width="76" height="6" rx="3" fill="#fff" opacity=".38"/>
+      <circle cx="650" cy="138" r="13" fill="#fff" opacity=".18"/>
+      <path d="M643 138l5 5 9-11" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g fill="#fff">
+      <circle cx="430" cy="52" r="3.5" class="pulse"/>
+      <circle cx="488" cy="198" r="2.8" class="pulse" style="animation-delay:1s"/>
+      <circle cx="688" cy="178" r="3.2" class="pulse" style="animation-delay:2s"/>
+    </g>
+    <rect x="50" y="54" width="126" height="34" rx="17" fill="#fff" opacity=".2"/>
+    <text x="113" y="76" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#fff">专注 IT 教育</text>
+    <text x="50" y="154" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="43" font-weight="700" fill="#fff">兔南程序员</text>
+    <text x="52" y="205" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="21" fill="#fff" opacity=".88">跟对老师 · 系统学好技术</text>
+    <rect x="52" y="222" width="152" height="42" rx="21" fill="#fff" opacity=".95"/>
+    <text x="128" y="249" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="17" font-weight="600" fill="#087a67">立即学习</text>
+    <path d="M-180 0 L-20 260 L80 260 L-80 0 Z" fill="#fff" opacity=".08">
+      <animateTransform attributeName="transform" type="translate" values="0 0;900 0" dur="6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>
