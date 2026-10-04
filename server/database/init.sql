@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `course_chapters` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `banners` (`id`, `position`, `img_url`, `title`, `sort_order`) VALUES
-    (1, 'top', '/static/demo/banner-dynamic-1.svg', '兔南程序员', 1),
+    (1, 'top', '/static/demo/banner-dynamic-1-photo.svg', '兔南程序员', 1),
     (2, 'top', '/static/demo/banner-dynamic-2.svg', 'Java 全栈开发', 2),
     (3, 'top', '/static/demo/banner-dynamic-3.svg', '大数据与人工智能', 3),
     (4, 'index', '/static/demo/online.svg?v=2', '在线课程', 1),
