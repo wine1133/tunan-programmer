@@ -1,5 +1,5 @@
 (function () {
-  var apiBase = window.location.origin
+  var apiBase = window.__TU_NAN_API_BASE__ || window.location.origin
   var lastRoute = ""
 
   function escapeHtml(value) {
