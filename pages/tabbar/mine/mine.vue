@@ -103,7 +103,7 @@
 	.mine-page {
 		min-height: 100vh;
 		box-sizing: border-box;
-		padding: 20rpx 24rpx 40rpx;
+		padding: 20rpx 24rpx 120rpx;
 		background: #f5f7f6;
 	}
 

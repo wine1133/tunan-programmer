@@ -31,7 +31,7 @@
     var style = document.createElement("style")
     style.id = "tunan-tab-style"
     style.textContent = [
-      ".tt-page{min-height:100vh;box-sizing:border-box;padding:10px 12px 24px;background:#f5f7f6;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;color:#17211d}",
+      "html,body{overflow-x:hidden!important}uni-page-body{padding-bottom:80px!important;box-sizing:border-box}.tt-page{min-height:100vh;box-sizing:border-box;padding:10px 12px 90px;background:#f5f7f6;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;color:#17211d}",
       ".tt-hero{position:relative;overflow:hidden;padding:22px 18px;border-radius:15px;background:linear-gradient(135deg,#00b783,#087f6b);color:#fff;box-shadow:0 8px 18px rgba(0,167,118,.2)}",
       ".tt-hero.blue{background:linear-gradient(135deg,#2f80ed,#2458bd);box-shadow:0 8px 18px rgba(47,128,237,.22)}",
       ".tt-kicker{font-size:10px;letter-spacing:1px;opacity:.8}.tt-title{margin-top:8px;font-size:21px;font-weight:700}.tt-desc{margin-top:6px;font-size:12px;opacity:.86}",

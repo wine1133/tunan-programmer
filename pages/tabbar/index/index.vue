@@ -81,6 +81,10 @@ import NavBar from "../../../components/navbar/navbar.vue"
 </script>
 
 <style>
+	page {
+		padding-bottom: 110rpx;
+	}
+
 	/* 在小程序和移动端中，非常推崇使用弹性盒子模型 */
 	.index_banner_box{
 		display: flex;
