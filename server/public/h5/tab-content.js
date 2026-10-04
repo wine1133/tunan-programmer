@@ -135,12 +135,12 @@
       if (loading) loading.remove()
       var video = document.createElement("video")
       video.className = "tt-video-player"
-      video.src = data.videoUrl || ""
-      video.poster = data.posterUrl || ""
-      video.controls = true
-      video.playsInline = true
-      video.preload = "metadata"
-      video.setAttribute("webkit-playsinline", "true")
+      video.setAttribute("src", data.videoUrl || "")
+      video.setAttribute("poster", data.posterUrl || "")
+      video.setAttribute("controls", "")
+      video.setAttribute("playsinline", "")
+      video.setAttribute("webkit-playsinline", "")
+      video.setAttribute("preload", "metadata")
       wrap.appendChild(video)
     }).catch(function () {
       var loading = document.getElementById("tt-video-loading")
