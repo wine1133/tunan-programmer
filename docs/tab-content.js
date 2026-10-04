@@ -1,5 +1,5 @@
 (function () {
-  var apiBase = window.__TU_NAN_API_BASE__ || window.location.origin
+  var apiBase = window.location.origin
   var lastRoute = ""
 
   function escapeHtml(value) {
@@ -45,6 +45,12 @@
       ".tt-profile{overflow:hidden;border-radius:14px;background:linear-gradient(135deg,#00b783,#087f6b);color:#fff;box-shadow:0 8px 18px rgba(0,167,118,.2)}.tt-profile-top{display:flex;align-items:center;padding:19px 17px 14px}.tt-avatar{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border:2px solid rgba(255,255,255,.45);border-radius:50%;background:rgba(255,255,255,.2);font-size:22px;font-weight:700}.tt-profile-main{flex:1;min-width:0;margin-left:12px}.tt-profile-main h2{margin:0;font-size:18px}.tt-profile-main p{margin:5px 0 0;font-size:11px;opacity:.82}.tt-vip{display:inline-block;margin-top:7px;padding:3px 8px;border-radius:9px;background:rgba(255,255,255,.18);font-size:10px}",
       ".tt-profile-stats{display:flex;padding:12px 0 14px;background:rgba(0,0,0,.06)}.tt-profile-stat{flex:1;text-align:center}.tt-profile-stat b{display:block;font-size:15px}.tt-profile-stat span{font-size:10px;opacity:.76}",
       ".tt-menu{margin-top:13px;padding:0 12px;border-radius:12px;background:#fff;box-shadow:0 5px 12px rgba(24,48,39,.06)}.tt-menu-row{display:flex;align-items:center;height:52px;border-bottom:1px solid #f0f3f2}.tt-menu-row:last-child{border-bottom:0}.tt-menu-icon{display:flex;align-items:center;justify-content:center;width:29px;height:29px;border-radius:9px;background:#edf9f5;color:#00a575}.tt-menu-title{flex:1;margin-left:10px;font-size:13px}.tt-badge{padding:3px 7px;border-radius:8px;background:#ff5b52;color:#fff;font-size:10px}.tt-arrow{margin-left:7px;color:#b7c0bc}",
+      ".tt-video-wrap{margin:12px 12px 18px;padding:12px;border-radius:13px;background:#fff;box-shadow:0 5px 14px rgba(28,50,42,.08)}",
+      ".tt-video-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}",
+      ".tt-video-title{font-size:16px;font-weight:700;color:#17211d}",
+      ".tt-video-sub{margin-top:4px;font-size:11px;color:#8f9995}",
+      ".tt-video-duration{padding:4px 9px;border-radius:10px;background:#e9f9f3;color:#00a575;font-size:10px}",
+      ".tt-video-player{display:block;width:100%;height:190px;border-radius:12px;background:#07110d;object-fit:cover}",
       ".tt-empty{padding:45px 0;text-align:center;color:#9aa39f;font-size:12px}"
     ].join("")
     document.head.appendChild(style)
@@ -110,6 +116,37 @@
     })
   }
 
+  function renderHome(body) {
+    if (body.querySelector(".tt-video-wrap")) return
+    var banner = body.querySelector(".index_banner_box")
+    if (!banner) return
+
+    var wrap = document.createElement("div")
+    wrap.className = "tt-video-wrap"
+    wrap.innerHTML = '<div class="tt-video-head"><div><div class="tt-video-title">大学生编程学习</div><div class="tt-video-sub">用专注，写下每一行成长</div></div><div class="tt-video-duration" id="tt-video-duration">加载中</div></div><div class="tt-empty" id="tt-video-loading">正在加载视频...</div>'
+    banner.insertAdjacentElement("afterend", wrap)
+
+    api("/api/index/video").then(function (result) {
+      var data = result.data || {}
+      var head = wrap.querySelector(".tt-video-head")
+      var duration = document.getElementById("tt-video-duration")
+      var loading = document.getElementById("tt-video-loading")
+      if (duration) duration.textContent = (data.duration || 0) + " 秒"
+      if (loading) loading.remove()
+      var video = document.createElement("video")
+      video.className = "tt-video-player"
+      video.src = data.videoUrl || ""
+      video.poster = data.posterUrl || ""
+      video.controls = true
+      video.playsInline = true
+      video.preload = "metadata"
+      video.setAttribute("webkit-playsinline", "true")
+      wrap.appendChild(video)
+    }).catch(function () {
+      var loading = document.getElementById("tt-video-loading")
+      if (loading) loading.textContent = "视频加载失败"
+    })
+  }
   function renderMine(body) {
     if (!setBody(body, "mine")) return
     body.innerHTML = '<div class="tt-page"><div class="tt-profile"><div class="tt-profile-top"><div class="tt-avatar" id="tt-avatar">兔</div><div class="tt-profile-main"><h2 id="tt-nickname">兔南学员</h2><p id="tt-bio">正在加载...</p><span class="tt-vip" id="tt-vip">普通学员</span></div></div><div class="tt-profile-stats"><div class="tt-profile-stat"><b id="tt-days">0</b><span>学习天数</span></div><div class="tt-profile-stat"><b id="tt-hours">0</b><span>累计小时</span></div><div class="tt-profile-stat"><b id="tt-courses">0</b><span>课程数</span></div><div class="tt-profile-stat"><b id="tt-finished">0</b><span>已完成</span></div></div></div><div class="tt-menu" id="tt-menu"><div class="tt-empty">正在加载个人中心...</div></div></div>'
@@ -147,7 +184,8 @@
     }
 
     injectCss()
-    if (route.indexOf("/pages/tabbar/classify/classify") !== -1) renderClassify(body)
+    if (route === "/" || route.indexOf("/pages/tabbar/index/index") !== -1) renderHome(body)
+    else if (route.indexOf("/pages/tabbar/classify/classify") !== -1) renderClassify(body)
     else if (route.indexOf("/pages/tabbar/study/study") !== -1) renderStudy(body)
     else if (route.indexOf("/pages/tabbar/mine/mine") !== -1) renderMine(body)
   }

@@ -8,6 +8,16 @@
 				</swiper-item>
 			</swiper>
 		</view>
+		<view class="study-video-section" v-if="studyVideo.videoUrl">
+			<view class="study-video-header">
+				<view>
+					<view class="study-video-title">{{ studyVideo.title }}</view>
+					<view class="study-video-subtitle">{{ studyVideo.subtitle }}</view>
+				</view>
+				<view class="study-video-duration">{{ studyVideo.duration }} 秒</view>
+			</view>
+			<video class="study-video-player" :src="studyVideo.videoUrl" :poster="studyVideo.posterUrl" controls object-fit="cover"></video>
+		</view>
 		<CourseNav />
 		<view class="online-box">
 			<image class="online-img" :src="index_banner.img_url" mode=""></image>
@@ -53,7 +63,14 @@ import NavBar from "../../../components/navbar/navbar.vue"
 			return {
 				top_banner:[],
 				index_banner:"",
-				foot_banner:""
+				foot_banner:"",
+				studyVideo: {
+					title: "",
+					subtitle: "",
+					videoUrl: "",
+					posterUrl: "",
+					duration: 0
+				}
 			}
 		},
 		components:{
@@ -76,6 +93,16 @@ import NavBar from "../../../components/navbar/navbar.vue"
 					this.foot_banner = res.data.foot_banner
 				}
 			})
+
+			request({
+				url:"/api/index/video",
+				success:res =>{
+					if (res.data.data) {
+						this.studyVideo = res.data.data
+					}
+				}
+			})
+
 		}
 	}
 </script>
@@ -86,7 +113,49 @@ import NavBar from "../../../components/navbar/navbar.vue"
 	}
 
 	/* 在小程序和移动端中，非常推崇使用弹性盒子模型 */
-	.index_banner_box{
+	.study-video-section {
+		margin: 8px 10px 18px;
+		padding: 12px;
+		border-radius: 14px;
+		background: #fff;
+		box-shadow: 0 5px 14px rgba(28, 50, 42, 0.08);
+	}
+
+	.study-video-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 10px;
+	}
+
+	.study-video-title {
+		color: #17211d;
+		font-size: 18px;
+		font-weight: 700;
+	}
+
+	.study-video-subtitle {
+		margin-top: 4px;
+		color: #8f9995;
+		font-size: 12px;
+	}
+
+	.study-video-duration {
+		padding: 4px 10px;
+		border-radius: 12px;
+		background: #e9f9f3;
+		color: #00a575;
+		font-size: 11px;
+	}
+
+	.study-video-player {
+		width: 100%;
+		height: 190px;
+		overflow: hidden;
+		border-radius: 12px;
+		background: #07110d;
+	}
+.index_banner_box{
 		display: flex;
 		width: 100%;
 		padding: 10px;

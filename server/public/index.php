@@ -260,6 +260,32 @@ try {
             ]);
             break;
 
+        case '/api/index/video':
+            $video = fetch_one(
+                'SELECT id, title, subtitle, video_url, poster_url, duration
+                 FROM study_videos
+                 ORDER BY sort_order, id
+                 LIMIT 1'
+            );
+
+            if ($video === null) {
+                json_response(['code' => 404, 'message' => 'Video not found', 'data' => null], 404);
+            }
+
+            json_response([
+                'code' => 0,
+                'message' => 'ok',
+                'data' => [
+                    'id' => (int) $video['id'],
+                    'title' => $video['title'],
+                    'subtitle' => $video['subtitle'],
+                    'videoUrl' => asset_url($video['video_url']),
+                    'posterUrl' => asset_url($video['poster_url']),
+                    'duration' => (int) $video['duration'],
+                ],
+            ]);
+            break;
+
         default:
             json_response(['code' => 404, 'message' => 'API Not Found'], 404);
     }

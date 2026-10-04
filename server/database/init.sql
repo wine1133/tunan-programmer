@@ -301,3 +301,25 @@ ON DUPLICATE KEY UPDATE
     `last_study_at` = VALUES(`last_study_at`),
     `status` = VALUES(`status`),
     `sort_order` = VALUES(`sort_order`);
+CREATE TABLE IF NOT EXISTS `study_videos` (
+    `id` INT UNSIGNED NOT NULL,
+    `title` VARCHAR(120) NOT NULL,
+    `subtitle` VARCHAR(200) NOT NULL DEFAULT '',
+    `video_url` VARCHAR(500) NOT NULL,
+    `poster_url` VARCHAR(500) NOT NULL,
+    `duration` INT UNSIGNED NOT NULL DEFAULT 0,
+    `sort_order` INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `study_videos`
+    (`id`, `title`, `subtitle`, `video_url`, `poster_url`, `duration`, `sort_order`)
+VALUES
+    (1, '大学生编程学习', '用专注，写下每一行成长', '/static/video/study-programming.mp4', '/static/video/study-programming-poster.jpg', 28, 1)
+ON DUPLICATE KEY UPDATE
+    `title` = VALUES(`title`),
+    `subtitle` = VALUES(`subtitle`),
+    `video_url` = VALUES(`video_url`),
+    `poster_url` = VALUES(`poster_url`),
+    `duration` = VALUES(`duration`),
+    `sort_order` = VALUES(`sort_order`);
