@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="260" viewBox="0 0 750 260" role="img" aria-label="大数据与人工智能">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff8a29"/>
+      <stop offset="100%" stop-color="#d84b16"/>
+    </linearGradient>
+  </defs>
+  <rect width="750" height="260" rx="28" fill="url(#bg)"/>
+  <circle cx="465" cy="70" r="151" fill="#ffffff" opacity="0.10"/>
+  <circle cx="80" cy="260" r="170" fill="#ffffff" opacity="0.08"/>
+  <rect x="52" y="54" width="118" height="34" rx="17" fill="#ffffff" opacity="0.20"/>
+  <text x="111" y="76" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#ffffff">前沿技术课程</text>
+  <text x="52" y="162" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="42" font-weight="700" fill="#ffffff">大数据与人工智能</text>
+  <text x="54" y="218" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="21" fill="#ffffff" opacity="0.88">从数据分析到机器学习工程实践</text>
+  <rect x="52" y="270" width="154" height="46" rx="23" fill="#ffffff" opacity="0.94"/>
+  <text x="129" y="300" text-anchor="middle" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" font-weight="600" fill="#d84b16">查看课程</text>
+</svg>

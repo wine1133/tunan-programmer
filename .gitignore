@@ -1,0 +1,13 @@
+# Runtime data
+server/logs/
+server/online-url.txt
+server/online-tunnel.pid
+
+# HBuilderX build cache and packages
+unpackage/
+
+# Dependencies and editor files
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
